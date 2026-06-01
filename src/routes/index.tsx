@@ -121,17 +121,57 @@ const REVIEWS = [
 ];
 
 const GALLERY = [
-  { src: driveImg, alt: `New concrete driveway poured in ${CITY}`, cat: "Driveways", caption: `Broom-finished driveway, ${CITY}` },
-  { src: stampedImg, alt: `Stamped concrete patio in slate pattern, ${CITY}`, cat: "Patios", caption: `Slate-stamped patio, South ${CITY}` },
-  { src: walkwayImg, alt: `Curved concrete walkway in a ${CITY} front yard`, cat: "Walkways", caption: `Curved walkway, Cedar Park` },
-  { src: wallImg, alt: `Concrete retaining wall on a hillside in ${CITY}`, cat: "Walls", caption: `Tiered retaining wall, Lakeway` },
-  { src: crewImg, alt: `Apex Concrete crew pouring a foundation slab`, cat: "Foundations", caption: `Residential foundation pour, ${CITY}` },
-  { src: commercialImg, alt: `Polished decorative concrete plaza for a commercial building`, cat: "Commercial", caption: `Commercial plaza, Downtown ${CITY}` },
-  { src: beforeImg, alt: `Before: cracked old concrete driveway needing replacement`, cat: "Before / After", caption: `Before — cracked slab in Pflugerville` },
-  { src: driveImg, alt: `After: replacement concrete driveway in Pflugerville`, cat: "Before / After", caption: `After — full tear-out and re-pour` },
+  {
+    cat: "Driveway",
+    location: `Pflugerville, ${CITY}`,
+    title: "Cracked slab → broom-finished driveway",
+    summary: "Full tear-out of a 40-year-old slab, new 4\" reinforced pour with control joints and a clean broom finish.",
+    before: beforeImg,
+    after: driveImg,
+    beforeAlt: "Before: cracked old concrete driveway needing replacement",
+    afterAlt: `After: new broom-finished concrete driveway in ${CITY}`,
+  },
+  {
+    cat: "Patio",
+    location: `South ${CITY}`,
+    title: "Weed-choked patio → slate-stamped retreat",
+    summary: "Demo of the failing slab, then a stamped-and-stained slate pattern patio sealed for Texas summers.",
+    before: beforePatioImg,
+    after: stampedImg,
+    beforeAlt: "Before: cracked concrete patio with weeds growing through",
+    afterAlt: `After: slate-stamped concrete patio in ${CITY}`,
+  },
+  {
+    cat: "Walkway",
+    location: "Cedar Park",
+    title: "Broken walkway → curved front path",
+    summary: "Removed the heaving slab, regraded the base, and poured a smooth curved walkway with hand-tooled edges.",
+    before: beforeWalkwayImg,
+    after: walkwayImg,
+    beforeAlt: "Before: cracked and broken concrete walkway",
+    afterAlt: "After: curved concrete walkway in a Cedar Park front yard",
+  },
+  {
+    cat: "Wall",
+    location: "Lakeway",
+    title: "Eroding hillside → engineered retaining wall",
+    summary: "Designed and poured a tiered retaining wall to hold a sloped backyard and recover usable space.",
+    before: crewImg,
+    after: wallImg,
+    beforeAlt: "Before: hillside excavation prepped for retaining wall",
+    afterAlt: `After: tiered concrete retaining wall in Lakeway`,
+  },
+  {
+    cat: "Commercial",
+    location: `Downtown ${CITY}`,
+    title: "Rough subgrade → polished plaza",
+    summary: "Commercial-grade pour with decorative polish for a downtown plaza — installed on schedule, after hours.",
+    before: crewImg,
+    after: commercialImg,
+    beforeAlt: "Before: prepped commercial subgrade ready for pour",
+    afterAlt: `After: polished decorative concrete plaza in downtown ${CITY}`,
+  },
 ];
-
-const GALLERY_FILTERS = ["All", "Driveways", "Patios", "Walkways", "Walls", "Foundations", "Commercial", "Before / After"];
 
 /* ------------------------------------------------------------------ */
 /*  PAGE                                                              */
