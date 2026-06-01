@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 package-lock.json
 dist
+.vercel/output
 dist-ssr
 .output
 .vinxi
