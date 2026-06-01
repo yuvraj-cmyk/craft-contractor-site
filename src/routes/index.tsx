@@ -11,18 +11,24 @@ async function fetchBusiness(slug: string) {
   }
 
   const res = await fetch(
-    `${url}/rest/v1/businesses?slug=eq.${encodeURIComponent(slug)}&select=business_name,city,phone&limit=1`,
+    `${url}/rest/v1/businesses?slug=eq.${encodeURIComponent(slug)}&select=business_name,city,phone,email,state&limit=1`,
     { headers: { apikey: key, Authorization: `Bearer ${key}` } }
   );
 
   if (!res.ok) throw new Error(`Supabase HTTP ${res.status}`);
 
-  const rows: { business_name: string; city: string; phone: string }[] =
+  const rows: { business_name: string; city: string; phone: string; email: string; state: string }[] =
     await res.json();
 
   if (!rows.length) throw new Error(`No row found for slug "${slug}"`);
 
-  return { businessName: rows[0].business_name, city: rows[0].city, phone: rows[0].phone };
+  return {
+    businessName: rows[0].business_name,
+    city: rows[0].city,
+    phone: rows[0].phone,
+    email: rows[0].email,
+    state: rows[0].state,
+  };
 }
 
 export const Route = createFileRoute("/")({

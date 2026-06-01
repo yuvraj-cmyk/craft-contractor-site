@@ -175,7 +175,7 @@ function TrustBar() {
 function Services() {
   const { businessName, city } = useSiteConfig();
   const services = [
-    { icon: Truck, name: "Concrete Driveways", desc: `Durable, expertly-poured concrete driveways across ${city} — engineered to handle Texas heat without cracking.`, img: driveImg },
+    { icon: Truck, name: "Concrete Driveways", desc: `Durable, expertly-poured concrete driveways across ${city} — engineered to handle extreme weather without cracking.`, img: driveImg },
     { icon: Home, name: "Patios & Walkways", desc: `Custom-poured patios and walkways that transform ${city} backyards into year-round living space.`, img: walkwayImg },
     { icon: Layers, name: "Stamped & Decorative Concrete", desc: `Stamped concrete in slate, brick, and stone patterns — high-end ${city} curb appeal at a fraction of pavers.`, img: stampedImg },
     { icon: Building2, name: "Foundations & Slabs", desc: `Code-compliant residential and commercial foundations poured to spec across the ${city} metro.`, img: crewImg },
@@ -220,7 +220,7 @@ function Services() {
 function WhyUs() {
   const { businessName, city } = useSiteConfig();
   const items = [
-    { icon: ShieldCheck, h: "Licensed, Bonded, Insured", p: "Fully licensed Texas concrete contractor with general liability and workers' comp coverage. Certificates available before we break ground." },
+    { icon: ShieldCheck, h: "Licensed, Bonded, Insured", p: "Fully licensed concrete contractor with general liability and workers' comp coverage. Certificates available before we break ground." },
     { icon: Hammer, h: "Skilled In-House Crews", p: `Every pour, every finish, every cut — done by ${businessName} employees. We never subcontract your project to the lowest bidder.` },
     { icon: Clock, h: "On Time, On Budget", p: "Written quote, written schedule, written cure plan. If something changes, you hear it from us first — never from a surprise invoice." },
     { icon: BadgeCheck, h: "Workmanship Guarantee", p: "We stand behind every slab we pour with a written workmanship warranty. If our work fails, we come back and make it right." },
@@ -332,7 +332,7 @@ function Gallery() {
   const { city } = useSiteConfig();
   const gallery = [
     { cat: "Driveway", location: `Pflugerville, ${city}`, title: "Cracked slab → broom-finished driveway", summary: "Full tear-out of a 40-year-old slab, new 4\" reinforced pour with control joints and a clean broom finish.", before: beforeImg, after: driveImg, beforeAlt: "Before: cracked old concrete driveway", afterAlt: `After: new broom-finished concrete driveway in ${city}` },
-    { cat: "Patio", location: `South ${city}`, title: "Weed-choked patio → slate-stamped retreat", summary: "Demo of the failing slab, then a stamped-and-stained slate pattern patio sealed for Texas summers.", before: beforePatioImg, after: stampedImg, beforeAlt: "Before: cracked concrete patio with weeds", afterAlt: `After: slate-stamped concrete patio in ${city}` },
+    { cat: "Patio", location: `South ${city}`, title: "Weed-choked patio → slate-stamped retreat", summary: "Demo of the failing slab, then a stamped-and-stained slate pattern patio sealed for long-term durability.", before: beforePatioImg, after: stampedImg, beforeAlt: "Before: cracked concrete patio with weeds", afterAlt: `After: slate-stamped concrete patio in ${city}` },
     { cat: "Walkway", location: "Cedar Park", title: "Broken walkway → curved front path", summary: "Removed the heaving slab, regraded the base, and poured a smooth curved walkway with hand-tooled edges.", before: beforeWalkwayImg, after: walkwayImg, beforeAlt: "Before: cracked and broken concrete walkway", afterAlt: "After: curved concrete walkway" },
     { cat: "Wall", location: "Lakeway", title: "Eroding hillside → engineered retaining wall", summary: "Designed and poured a tiered retaining wall to hold a sloped backyard and recover usable space.", before: crewImg, after: wallImg, beforeAlt: "Before: hillside prepped for retaining wall", afterAlt: "After: tiered concrete retaining wall" },
     { cat: "Commercial", location: `Downtown ${city}`, title: "Rough subgrade → polished plaza", summary: "Commercial-grade pour with decorative polish for a downtown plaza — installed on schedule, after hours.", before: crewImg, after: commercialImg, beforeAlt: "Before: prepped commercial subgrade", afterAlt: `After: polished decorative concrete plaza in downtown ${city}` },
@@ -521,7 +521,7 @@ function Field({ label, id, error, children, className = "" }: { label: string; 
 }
 
 function Contact() {
-  const { businessName, city, phone } = useSiteConfig();
+  const { businessName, city, phone, email, state } = useSiteConfig();
   const telHref = `tel:${phone.replace(/[^0-9+]/g, "")}`;
   const serviceNames = ["Concrete Driveways", "Patios & Walkways", "Stamped & Decorative Concrete", "Foundations & Slabs", "Concrete Repair & Resurfacing", "Retaining Walls", "Sidewalks & Curbs", "Commercial Concrete"];
   const [form, setForm] = useState({ name: "", phone: "", email: "", service: serviceNames[0], details: "", zip: "" });
@@ -579,8 +579,8 @@ function Contact() {
             <p className="mt-2 text-white/70 text-sm">{city}'s trusted concrete contractor.</p>
             <ul className="mt-6 space-y-4 text-sm">
               <li className="flex items-start gap-3"><Phone size={18} strokeWidth={2} className="text-primary mt-0.5 shrink-0" /><a href={telHref} className="hover:text-primary">{phone}</a></li>
-              <li className="flex items-start gap-3"><Mail size={18} strokeWidth={2} className="text-primary mt-0.5 shrink-0" /><a href="mailto:estimates@apexconcreteco.com" className="hover:text-primary">estimates@apexconcreteco.com</a></li>
-              <li className="flex items-start gap-3"><MapPin size={18} strokeWidth={2} className="text-primary mt-0.5 shrink-0" /><span>1428 Industrial Blvd<br />{city}, TX 78702</span></li>
+              <li className="flex items-start gap-3"><Mail size={18} strokeWidth={2} className="text-primary mt-0.5 shrink-0" /><a href={`mailto:${email}`} className="hover:text-primary">{email}</a></li>
+              <li className="flex items-start gap-3"><MapPin size={18} strokeWidth={2} className="text-primary mt-0.5 shrink-0" /><span>{city}, {state}</span></li>
               <li className="flex items-start gap-3"><Clock size={18} strokeWidth={2} className="text-primary mt-0.5 shrink-0" /><span>Mon–Fri 7:00a–6:00p<br />Sat 8:00a–2:00p<br />Sun closed</span></li>
             </ul>
           </div>
@@ -594,7 +594,7 @@ function Contact() {
 /*  Footer                                                            */
 /* ------------------------------------------------------------------ */
 function Footer() {
-  const { businessName, city, phone } = useSiteConfig();
+  const { businessName, city, phone, email, state } = useSiteConfig();
   const telHref = `tel:${phone.replace(/[^0-9+]/g, "")}`;
   const serviceNames = ["Concrete Driveways", "Patios & Walkways", "Stamped & Decorative Concrete", "Foundations & Slabs", "Concrete Repair & Resurfacing", "Retaining Walls"];
   return (
@@ -624,8 +624,8 @@ function Footer() {
           <p className="font-display text-sm uppercase text-white mb-4 tracking-wider">Contact</p>
           <ul className="space-y-2 text-sm">
             <li><a href={telHref} className="hover:text-primary">{phone}</a></li>
-            <li>estimates@apexconcreteco.com</li>
-            <li>1428 Industrial Blvd<br />{city}, TX 78702</li>
+            <li>{email}</li>
+            <li>{city}, {state}</li>
             <li className="text-white/60 pt-2">Mon–Fri 7a–6p · Sat 8a–2p</li>
           </ul>
         </div>
@@ -633,7 +633,7 @@ function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/60">
           <p>© {new Date().getFullYear()} {businessName}. All rights reserved.</p>
-          <p>Built to last in {city}, Texas.</p>
+          <p>Built to last in {city}, {state}.</p>
         </div>
       </div>
     </footer>
