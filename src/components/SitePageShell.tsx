@@ -28,6 +28,8 @@ export function SitePageShell(config: Partial<SiteConfig> = {}) {
     businessName: config.businessName ?? DEFAULT_CONFIG.businessName,
     city: config.city ?? DEFAULT_CONFIG.city,
     phone: config.phone ?? DEFAULT_CONFIG.phone,
+    email: config.email ?? DEFAULT_CONFIG.email,
+    state: config.state ?? DEFAULT_CONFIG.state,
   };
   return (
     <SiteConfigProvider value={value}>
