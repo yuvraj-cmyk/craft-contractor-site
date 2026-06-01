@@ -383,25 +383,21 @@ function Gallery() {
 /* ------------------------------------------------------------------ */
 function ServiceAreas() {
   const { businessName, city } = useSiteConfig();
-  const areas = ["Downtown Austin", "Round Rock", "Cedar Park", "Pflugerville", "Leander", "Buda", "Kyle", "Lakeway", "Bee Cave", "Manor", "Hutto", "Georgetown"];
   return (
     <section id="areas" className="py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-start">
         <div>
           <p className="text-primary font-semibold uppercase tracking-[0.2em] text-xs mb-3">Where we work</p>
           <h2 className="text-4xl sm:text-5xl text-ink">Proudly Serving {city} and Surrounding Areas</h2>
-          <p className="mt-5 text-lg text-slate-concrete">Based in {city}, we pour concrete across the metro and into the suburbs. If your town isn't listed, call us — we likely still serve you.</p>
-          <ul className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {areas.map((a) => (
-              <li key={a} className="flex items-center gap-2 text-slate-concrete">
-                <MapPin size={16} strokeWidth={2} className="text-primary-hover shrink-0" />
-                <span className="text-sm font-medium text-ink">{a}</span>
-              </li>
-            ))}
-          </ul>
+          <p className="mt-5 text-lg text-slate-concrete">Based in {city}, we pour concrete across the metro and into the suburbs. Call us to find out if we serve your area.</p>
         </div>
         <div className="rounded-lg overflow-hidden border border-border bg-concrete aspect-[4/3] lg:aspect-auto lg:h-[460px]">
-          <iframe title={`Map of ${businessName} service area in ${city}`} src="https://www.openstreetmap.org/export/embed.html?bbox=-97.95%2C30.15%2C-97.55%2C30.45&amp;layer=mapnik" className="w-full h-full" loading="lazy" />
+          <iframe
+            title={`Map of ${businessName} service area in ${city}`}
+            src={`https://maps.google.com/maps?q=${encodeURIComponent(city)}&output=embed&z=11`}
+            className="w-full h-full"
+            loading="lazy"
+          />
         </div>
       </div>
     </section>
