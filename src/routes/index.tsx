@@ -44,7 +44,7 @@ export const Route = createFileRoute("/")({
 
   head: () => ({
     meta: [
-      { title: `Concrete Contractor in ${DEFAULT_CONFIG.city} | ${DEFAULT_CONFIG.businessName}` },
+      { title: `Best Concrete Contractor` },
     ],
   }),
 
