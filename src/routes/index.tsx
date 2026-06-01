@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Phone, Menu, X, Star, ShieldCheck, Award, BadgeCheck,
   Truck, Home, Layers, Building2, Wrench, Construction, Ruler, HardHat,
   Hammer, Clock, ClipboardCheck, CheckCircle2, MapPin, Mail, Quote,
-  ChevronDown, ChevronRight, ArrowRight,
+  ChevronDown, ChevronRight, ChevronLeft, ArrowRight, MoveHorizontal,
 } from "lucide-react";
 
 import heroImg from "@/assets/hero-concrete.jpg";
@@ -14,6 +14,8 @@ import driveImg from "@/assets/project-driveway.jpg";
 import walkwayImg from "@/assets/project-walkway.jpg";
 import wallImg from "@/assets/project-wall.jpg";
 import beforeImg from "@/assets/before-driveway.jpg";
+import beforePatioImg from "@/assets/before-patio.jpg";
+import beforeWalkwayImg from "@/assets/before-walkway.jpg";
 import commercialImg from "@/assets/project-commercial.jpg";
 
 /* ------------------------------------------------------------------ */
