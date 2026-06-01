@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Phone, Menu, X, Star, ShieldCheck, Award, BadgeCheck,
   Truck, Home, Layers, Building2, Wrench, Construction, Ruler, HardHat,
   Hammer, Clock, ClipboardCheck, CheckCircle2, MapPin, Mail, Quote,
-  ChevronDown, ChevronRight, ArrowRight,
+  ChevronDown, ChevronRight, ChevronLeft, ArrowRight, MoveHorizontal,
 } from "lucide-react";
 
 import heroImg from "@/assets/hero-concrete.jpg";
@@ -14,6 +14,8 @@ import driveImg from "@/assets/project-driveway.jpg";
 import walkwayImg from "@/assets/project-walkway.jpg";
 import wallImg from "@/assets/project-wall.jpg";
 import beforeImg from "@/assets/before-driveway.jpg";
+import beforePatioImg from "@/assets/before-patio.jpg";
+import beforeWalkwayImg from "@/assets/before-walkway.jpg";
 import commercialImg from "@/assets/project-commercial.jpg";
 
 /* ------------------------------------------------------------------ */
@@ -119,17 +121,57 @@ const REVIEWS = [
 ];
 
 const GALLERY = [
-  { src: driveImg, alt: `New concrete driveway poured in ${CITY}`, cat: "Driveways", caption: `Broom-finished driveway, ${CITY}` },
-  { src: stampedImg, alt: `Stamped concrete patio in slate pattern, ${CITY}`, cat: "Patios", caption: `Slate-stamped patio, South ${CITY}` },
-  { src: walkwayImg, alt: `Curved concrete walkway in a ${CITY} front yard`, cat: "Walkways", caption: `Curved walkway, Cedar Park` },
-  { src: wallImg, alt: `Concrete retaining wall on a hillside in ${CITY}`, cat: "Walls", caption: `Tiered retaining wall, Lakeway` },
-  { src: crewImg, alt: `Apex Concrete crew pouring a foundation slab`, cat: "Foundations", caption: `Residential foundation pour, ${CITY}` },
-  { src: commercialImg, alt: `Polished decorative concrete plaza for a commercial building`, cat: "Commercial", caption: `Commercial plaza, Downtown ${CITY}` },
-  { src: beforeImg, alt: `Before: cracked old concrete driveway needing replacement`, cat: "Before / After", caption: `Before — cracked slab in Pflugerville` },
-  { src: driveImg, alt: `After: replacement concrete driveway in Pflugerville`, cat: "Before / After", caption: `After — full tear-out and re-pour` },
+  {
+    cat: "Driveway",
+    location: `Pflugerville, ${CITY}`,
+    title: "Cracked slab → broom-finished driveway",
+    summary: "Full tear-out of a 40-year-old slab, new 4\" reinforced pour with control joints and a clean broom finish.",
+    before: beforeImg,
+    after: driveImg,
+    beforeAlt: "Before: cracked old concrete driveway needing replacement",
+    afterAlt: `After: new broom-finished concrete driveway in ${CITY}`,
+  },
+  {
+    cat: "Patio",
+    location: `South ${CITY}`,
+    title: "Weed-choked patio → slate-stamped retreat",
+    summary: "Demo of the failing slab, then a stamped-and-stained slate pattern patio sealed for Texas summers.",
+    before: beforePatioImg,
+    after: stampedImg,
+    beforeAlt: "Before: cracked concrete patio with weeds growing through",
+    afterAlt: `After: slate-stamped concrete patio in ${CITY}`,
+  },
+  {
+    cat: "Walkway",
+    location: "Cedar Park",
+    title: "Broken walkway → curved front path",
+    summary: "Removed the heaving slab, regraded the base, and poured a smooth curved walkway with hand-tooled edges.",
+    before: beforeWalkwayImg,
+    after: walkwayImg,
+    beforeAlt: "Before: cracked and broken concrete walkway",
+    afterAlt: "After: curved concrete walkway in a Cedar Park front yard",
+  },
+  {
+    cat: "Wall",
+    location: "Lakeway",
+    title: "Eroding hillside → engineered retaining wall",
+    summary: "Designed and poured a tiered retaining wall to hold a sloped backyard and recover usable space.",
+    before: crewImg,
+    after: wallImg,
+    beforeAlt: "Before: hillside excavation prepped for retaining wall",
+    afterAlt: `After: tiered concrete retaining wall in Lakeway`,
+  },
+  {
+    cat: "Commercial",
+    location: `Downtown ${CITY}`,
+    title: "Rough subgrade → polished plaza",
+    summary: "Commercial-grade pour with decorative polish for a downtown plaza — installed on schedule, after hours.",
+    before: crewImg,
+    after: commercialImg,
+    beforeAlt: "Before: prepped commercial subgrade ready for pour",
+    afterAlt: `After: polished decorative concrete plaza in downtown ${CITY}`,
+  },
 ];
-
-const GALLERY_FILTERS = ["All", "Driveways", "Patios", "Walkways", "Walls", "Foundations", "Commercial", "Before / After"];
 
 /* ------------------------------------------------------------------ */
 /*  PAGE                                                              */
@@ -475,57 +517,164 @@ function Process() {
 }
 
 /* ------------------- Gallery ------------------- */
+function BeforeAfter({ before, after, beforeAlt, afterAlt }: { before: string; after: string; beforeAlt: string; afterAlt: string }) {
+  const [pos, setPos] = useState(50);
+  const [dragging, setDragging] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const updateFromClientX = useCallback((clientX: number) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const pct = ((clientX - rect.left) / rect.width) * 100;
+    setPos(Math.max(0, Math.min(100, pct)));
+  }, []);
+
+  useEffect(() => {
+    if (!dragging) return;
+    const onMove = (e: PointerEvent) => updateFromClientX(e.clientX);
+    const onUp = () => setDragging(false);
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+    };
+  }, [dragging, updateFromClientX]);
+
+  return (
+    <div
+      ref={ref}
+      className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden rounded-lg bg-ink select-none touch-none"
+      onPointerDown={(e) => {
+        setDragging(true);
+        updateFromClientX(e.clientX);
+      }}
+    >
+      <img
+        src={after}
+        alt={afterAlt}
+        width={1600}
+        height={1000}
+        loading="lazy"
+        draggable={false}
+        className="absolute inset-0 h-full w-full object-cover pointer-events-none"
+      />
+      <div
+        className="absolute inset-0 overflow-hidden pointer-events-none"
+        style={{ width: `${pos}%` }}
+      >
+        <img
+          src={before}
+          alt={beforeAlt}
+          width={1600}
+          height={1000}
+          loading="lazy"
+          draggable={false}
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ width: `${100 / (pos / 100 || 0.0001)}%`, maxWidth: "none" }}
+        />
+      </div>
+
+      <span className="absolute top-4 left-4 px-3 py-1 rounded-md bg-ink/85 text-white text-xs font-semibold uppercase tracking-wider">Before</span>
+      <span className="absolute top-4 right-4 px-3 py-1 rounded-md bg-primary text-primary-foreground text-xs font-semibold uppercase tracking-wider">After</span>
+
+      <div
+        className="absolute top-0 bottom-0 w-[2px] bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.25)] pointer-events-none"
+        style={{ left: `${pos}%`, transform: "translateX(-1px)" }}
+      />
+      <button
+        type="button"
+        aria-label="Drag to compare before and after"
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          setDragging(true);
+        }}
+        className="absolute top-1/2 h-11 w-11 -mt-[22px] -ml-[22px] rounded-full bg-white text-ink shadow-lg flex items-center justify-center cursor-ew-resize hover:scale-105 transition-transform"
+        style={{ left: `${pos}%` }}
+      >
+        <MoveHorizontal size={20} strokeWidth={2.5} />
+      </button>
+    </div>
+  );
+}
+
 function Gallery() {
-  const [filter, setFilter] = useState("All");
-  const items = filter === "All" ? GALLERY : GALLERY.filter((g) => g.cat === filter);
+  const [idx, setIdx] = useState(0);
+  const total = GALLERY.length;
+  const item = GALLERY[idx];
+  const go = (n: number) => setIdx((idx + n + total) % total);
 
   return (
     <section id="gallery" className="bg-concrete py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10">
           <div className="max-w-2xl">
-            <p className="text-primary-hover font-semibold uppercase tracking-[0.2em] text-xs mb-3">Recent work</p>
-            <h2 className="text-4xl sm:text-5xl text-ink">Project gallery</h2>
+            <p className="text-primary-hover font-semibold uppercase tracking-[0.2em] text-xs mb-3">Before &amp; After</p>
+            <h2 className="text-4xl sm:text-5xl text-ink">See the transformation</h2>
             <p className="mt-4 text-lg text-slate-concrete">
-              A few of our recent pours around {CITY}. Filter by project type — every photo is real work by our crew.
+              Drag the slider on each project to reveal the before and after. Real {CITY} jobs, real crews, real results.
             </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => go(-1)}
+              aria-label="Previous project"
+              className="h-11 w-11 rounded-md border border-border bg-background text-ink hover:border-ink flex items-center justify-center transition-colors"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <span className="text-sm font-semibold text-ink tabular-nums w-14 text-center">
+              {String(idx + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+            </span>
+            <button
+              type="button"
+              onClick={() => go(1)}
+              aria-label="Next project"
+              className="h-11 w-11 rounded-md border border-border bg-background text-ink hover:border-ink flex items-center justify-center transition-colors"
+            >
+              <ChevronRight size={20} />
+            </button>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-8">
-          {GALLERY_FILTERS.map((f) => (
-            <button
-              key={f}
-              type="button"
-              onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-md text-sm font-semibold border transition-colors ${
-                filter === f
-                  ? "bg-ink text-white border-ink"
-                  : "bg-background text-ink border-border hover:border-ink"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
+        <div className="grid lg:grid-cols-[1fr_320px] gap-6 lg:gap-8 items-start">
+          <BeforeAfter
+            key={idx}
+            before={item.before}
+            after={item.after}
+            beforeAlt={item.beforeAlt}
+            afterAlt={item.afterAlt}
+          />
+          <div className="bg-background border border-border rounded-lg p-6 lg:p-7">
+            <p className="text-xs uppercase tracking-[0.2em] font-semibold text-primary-hover">{item.cat}</p>
+            <h3 className="mt-3 text-2xl text-ink leading-tight">{item.title}</h3>
+            <p className="mt-2 text-sm text-slate-concrete flex items-center gap-1.5">
+              <MapPin size={14} className="text-primary-hover" /> {item.location}
+            </p>
+            <p className="mt-5 text-base text-slate-concrete leading-relaxed">{item.summary}</p>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-          {items.map((g, i) => (
-            <figure key={i} className="group relative overflow-hidden rounded-lg bg-ink aspect-[4/3]">
-              <img
-                src={g.src}
-                alt={g.alt}
-                width={1024}
-                height={768}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <figcaption className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-ink/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                <p className="text-xs uppercase tracking-wider text-primary font-semibold">{g.cat}</p>
-                <p className="text-sm text-white mt-1">{g.caption}</p>
-              </figcaption>
-            </figure>
-          ))}
+            <div className="mt-6 flex flex-wrap gap-2">
+              {GALLERY.map((g, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setIdx(i)}
+                  aria-label={`View ${g.cat} project: ${g.title}`}
+                  aria-current={i === idx}
+                  className={`h-2.5 rounded-full transition-all ${i === idx ? "w-8 bg-ink" : "w-2.5 bg-border hover:bg-slate-concrete"}`}
+                />
+              ))}
+            </div>
+
+            <a
+              href="#contact"
+              className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-primary-hover transition-colors"
+            >
+              Get a quote for a project like this <ArrowRight size={16} />
+            </a>
+          </div>
         </div>
       </div>
     </section>
