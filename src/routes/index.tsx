@@ -69,7 +69,7 @@ export const Route = createFileRoute("/")({
     }
 
     return data
-      ? <SitePageShell businessName={data.businessName} city={data.city} phone={data.phone} />
+      ? <SitePageShell businessName={data.businessName} city={data.city} phone={data.phone} email={data.email} state={data.state} />
       : <SitePageShell />;
   },
 });
