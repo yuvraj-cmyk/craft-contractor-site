@@ -1,35 +1,35 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SitePageShell } from "@/components/SitePageShell";
 import { DEFAULT_CONFIG } from "@/lib/site-config";
-
-const { businessName, city, phone } = DEFAULT_CONFIG;
-const TITLE = `Concrete Contractor in ${city} | ${businessName}`;
-const DESCRIPTION = `${businessName} is ${city}'s licensed concrete contractor for driveways, patios, stamped concrete, foundations and repair. Free written estimates — call ${phone}.`;
+import { getBusinessBySlug } from "@/lib/api/businesses.functions";
 
 export const Route = createFileRoute("/")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    slug: typeof search.slug === "string" ? search.slug : undefined,
+  }),
+
+  loaderDeps: ({ search: { slug } }) => ({ slug }),
+
+  loader: async ({ deps: { slug } }) => {
+    if (!slug) return null;
+    try {
+      return await getBusinessBySlug({ data: { slug } });
+    } catch {
+      return null;
+    }
+  },
+
   head: () => ({
     meta: [
-      { title: TITLE },
-      { name: "description", content: DESCRIPTION },
-      { property: "og:title", content: TITLE },
-      { property: "og:description", content: DESCRIPTION },
-      { property: "og:url", content: "/" },
-    ],
-    links: [{ rel: "canonical", href: "/" }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "LocalBusiness",
-          name: businessName,
-          image: "/og.jpg",
-          telephone: phone,
-          priceRange: "$$",
-          address: { "@type": "PostalAddress", streetAddress: "1428 Industrial Blvd", addressLocality: city, addressRegion: "TX", postalCode: "78702", addressCountry: "US" },
-        }),
-      },
+      { title: `Concrete Contractor in ${DEFAULT_CONFIG.city} | ${DEFAULT_CONFIG.businessName}` },
+      { name: "description", content: `${DEFAULT_CONFIG.businessName} is ${DEFAULT_CONFIG.city}'s licensed concrete contractor.` },
     ],
   }),
-  component: SitePageShell,
+
+  component: function IndexPage() {
+    const data = Route.useLoaderData();
+    return data
+      ? <SitePageShell businessName={data.businessName} city={data.city} phone={data.phone} />
+      : <SitePageShell />;
+  },
 });
