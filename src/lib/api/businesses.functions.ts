@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { getServerConfig } from "../config.server";
 
@@ -7,21 +6,25 @@ export const getBusinessBySlug = createServerFn({ method: "GET" })
   .validator(z.object({ slug: z.string().min(1) }))
   .handler(async ({ data }) => {
     const { supabaseUrl, supabaseAnonKey } = getServerConfig();
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-    const { data: business, error } = await supabase
-      .from("businesses")
-      .select("business_name, city, phone")
-      .eq("slug", data.slug)
-      .single();
+    const res = await fetch(
+      `${supabaseUrl}/rest/v1/businesses?slug=eq.${encodeURIComponent(data.slug)}&select=business_name,city,phone&limit=1`,
+      {
+        headers: {
+          apikey: supabaseAnonKey,
+          Authorization: `Bearer ${supabaseAnonKey}`,
+        },
+      }
+    );
 
-    if (error || !business) {
-      throw new Error(`Business not found: ${data.slug}`);
-    }
+    if (!res.ok) throw new Error(`Supabase responded ${res.status}`);
+
+    const rows: { business_name: string; city: string; phone: string }[] = await res.json();
+    if (!rows.length) throw new Error(`No business found for slug: ${data.slug}`);
 
     return {
-      businessName: business.business_name as string,
-      city: business.city as string,
-      phone: business.phone as string,
+      businessName: rows[0].business_name,
+      city: rows[0].city,
+      phone: rows[0].phone,
     };
   });
