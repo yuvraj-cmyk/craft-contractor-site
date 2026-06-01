@@ -120,7 +120,7 @@ function Hero() {
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/85 via-ink/60 to-ink/95" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32 lg:py-40">
         <div className="max-w-3xl">
-          <p className="text-primary font-semibold uppercase tracking-[0.2em] text-xs sm:text-sm mb-5">Concrete Contractor — {city}, TX</p>
+          <p className="text-primary font-semibold uppercase tracking-[0.2em] text-xs sm:text-sm mb-5">Concrete Contractor — {city}</p>
           <h1 className="text-white font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl leading-[0.95]">{city}'s Trusted<br />Concrete Contractor</h1>
           <p className="mt-6 text-lg sm:text-xl text-white/85 max-w-2xl">Durable, expertly-poured driveways, patios, foundations and stamped concrete — backed by a written workmanship guarantee. Free on-site estimates across the {city} metro.</p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
